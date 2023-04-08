@@ -1,28 +1,15 @@
 PODS:
   - Flutter (1.0.0)
-  - twilio_voice_mimp (0.0.4):
-    - Flutter
-    - TwilioVoice (~> 6.4.2)
-  - TwilioVoice (6.4.3)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - twilio_voice_mimp (from `.symlinks/plugins/twilio_voice_mimp/ios`)
-
-SPEC REPOS:
-  trunk:
-    - TwilioVoice
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  twilio_voice_mimp:
-    :path: ".symlinks/plugins/twilio_voice_mimp/ios"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  twilio_voice_mimp: 37a4b00df1be6e69c92795ddb5afaa067675b6a2
-  TwilioVoice: 577a3c58f77032a141a56c4050a8fb802618835c
 
 PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
 

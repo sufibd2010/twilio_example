@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MainApp());
@@ -26,6 +27,13 @@ class _DialScreenState extends State<DialScreen> with WidgetsBindingObserver {
   final accessToken =
       'eyJjdHkiOiJ0d2lsaW8tZnBhO3Y9MSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.eyJpc3MiOiJTSzlmMzllMzM2YmE0YTJkNzY5MGRmMGU3ZDY5YTBiNWJjIiwiZXhwIjoxNjgwODY1NTg0LCJqdGkiOiJTSzlmMzllMzM2YmE0YTJkNzY5MGRmMGU3ZDY5YTBiNWJjLTE2ODA4NTgzODQiLCJzdWIiOiJBQzU4ODYxMDE4YzhiZTM5ZmRhMGNlYjc5YjBmNDRiMmNlIiwiZ3JhbnRzIjp7ImlkZW50aXR5IjoiMTkwOTM3NTgyMjQiLCJ2b2ljZSI6eyJpbmNvbWluZyI6eyJhbGxvdyI6dHJ1ZX0sIm91dGdvaW5nIjp7ImFwcGxpY2F0aW9uX3NpZCI6IkFQZWQ1NTkwYzg3MGZiYWJkZTc0NDdmMTNkODU1YmVmMmIifX19fQ.lRodtPf03wqKoTEX5zlmKcXdbf2B2QQYPLp8iHRaM5c';
   final _controller = TextEditingController();
+  static const MethodChannel _channel = MethodChannel('voice_quickstart');
+
+  Future<void> makeCall(String accessToken) async {
+    final result = await _channel.invokeMethod('makeCall', {'accessToken': accessToken});
+    print(result);
+    return result;
+  }
 
   @override
   void initState() {
@@ -61,6 +69,11 @@ class _DialScreenState extends State<DialScreen> with WidgetsBindingObserver {
                 ElevatedButton(
                   child: const Text("Make Call"),
                   onPressed: () async {
+                    try {
+                      await makeCall(accessToken);
+                    } catch (e) {
+                      print(e);
+                    }
                     print("starting call to ${_controller.text}");
                   },
                 ),
