@@ -13,11 +13,9 @@ protocol PushKitEventDelegate: AnyObject {
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, PKPushRegistryDelegate {
-    
-    
+
     var pushKitEventDelegate: PushKitEventDelegate?
     var voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
-//    var navigationController: UINavigationController!
     
   override func application(
     _ application: UIApplication,
@@ -27,19 +25,10 @@ protocol PushKitEventDelegate: AnyObject {
       NSLog("Twilio Voice Version: %@", TwilioVoiceSDK.sdkVersion())
       
       let viewController = UIApplication.shared.windows.first?.rootViewController as? ViewController
-           
+    
       
-      /*
-               * Your app must initialize PKPushRegistry with PushKit push type VoIP at the launch time. As mentioned in the
-               * [PushKit guidelines](https://developer.apple.com/documentation/pushkit/supporting_pushkit_notifications_in_your_app),
-               * the system can't deliver push notifications to your app until you create a PKPushRegistry object for
-               * VoIP push type and set the delegate. If your app delays the initialization of PKPushRegistry, your app may receive outdated
-               * PushKit push notifications, and if your app decides not to report the received outdated push notifications to CallKit, iOS may
-               * terminate your app.
-               */
-              initializePushKit()
+    initializePushKit()
 
-             
       let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
       let METHOD_CHANNEL_NAME = "voice_quickstart"
       let voiceChannel = FlutterMethodChannel(name:METHOD_CHANNEL_NAME,binaryMessenger: controller.binaryMessenger)
@@ -50,6 +39,8 @@ protocol PushKitEventDelegate: AnyObject {
           case "makeCall":
               guard let args = call.arguments as? [String:String] else {return}
               let accessToken = args["accessToken"]!
+              viewController?.accessToken = accessToken
+//              destinationVC?.present(viewController!, animated: true)
               self.pushKitEventDelegate = viewController
               self.callVoice(accessToken: accessToken)
           default:
@@ -57,13 +48,7 @@ protocol PushKitEventDelegate: AnyObject {
           }
       })
       
-      
-
-      
       GeneratedPluginRegistrant.register(with: self)
-      
-  
-      
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
     

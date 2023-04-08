@@ -11,7 +11,7 @@ import PushKit
 import CallKit
 import TwilioVoice
 
-let accessToken = "eyJjdHkiOiJ0d2lsaW8tZnBhO3Y9MSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.eyJpc3MiOiJTSzlmMzllMzM2YmE0YTJkNzY5MGRmMGU3ZDY5YTBiNWJjIiwiZXhwIjoxNjgwODY1NTg0LCJqdGkiOiJTSzlmMzllMzM2YmE0YTJkNzY5MGRmMGU3ZDY5YTBiNWJjLTE2ODA4NTgzODQiLCJzdWIiOiJBQzU4ODYxMDE4YzhiZTM5ZmRhMGNlYjc5YjBmNDRiMmNlIiwiZ3JhbnRzIjp7ImlkZW50aXR5IjoiMTkwOTM3NTgyMjQiLCJ2b2ljZSI6eyJpbmNvbWluZyI6eyJhbGxvdyI6dHJ1ZX0sIm91dGdvaW5nIjp7ImFwcGxpY2F0aW9uX3NpZCI6IkFQZWQ1NTkwYzg3MGZiYWJkZTc0NDdmMTNkODU1YmVmMmIifX19fQ.lRodtPf03wqKoTEX5zlmKcXdbf2B2QQYPLp8iHRaM5c"
+//let accessToken = "eyJjdHkiOiJ0d2lsaW8tZnBhO3Y9MSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.eyJpc3MiOiJTSzlmMzllMzM2YmE0YTJkNzY5MGRmMGU3ZDY5YTBiNWJjIiwiZXhwIjoxNjgwODY1NTg0LCJqdGkiOiJTSzlmMzllMzM2YmE0YTJkNzY5MGRmMGU3ZDY5YTBiNWJjLTE2ODA4NTgzODQiLCJzdWIiOiJBQzU4ODYxMDE4YzhiZTM5ZmRhMGNlYjc5YjBmNDRiMmNlIiwiZ3JhbnRzIjp7ImlkZW50aXR5IjoiMTkwOTM3NTgyMjQiLCJ2b2ljZSI6eyJpbmNvbWluZyI6eyJhbGxvdyI6dHJ1ZX0sIm91dGdvaW5nIjp7ImFwcGxpY2F0aW9uX3NpZCI6IkFQZWQ1NTkwYzg3MGZiYWJkZTc0NDdmMTNkODU1YmVmMmIifX19fQ.lRodtPf03wqKoTEX5zlmKcXdbf2B2QQYPLp8iHRaM5c"
 let twimlParamTo = "to"
 
 let kRegistrationTTLInDays = 365
@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var speakerSwitch: UISwitch!
 
     var incomingPushCompletionCallback: (() -> Void)?
-
+    var accessToken: String?
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
 
@@ -55,7 +55,9 @@ class ViewController: UIViewController {
     var playCustomRingback = false
     var ringtonePlayer: AVAudioPlayer? = nil
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(
+        coder aDecoder: NSCoder
+    ) {
         isSpinning = false
 
         super.init(coder: aDecoder)
@@ -260,7 +262,7 @@ extension ViewController: PushKitEventDelegate {
         /*
          * Perform registration if a new device token is detected.
          */
-        TwilioVoiceSDK.register(accessToken: accessToken, deviceToken: cachedDeviceToken) { error in
+        TwilioVoiceSDK.register(accessToken: accessToken!, deviceToken: cachedDeviceToken) { error in
             if let error = error {
                 NSLog("An error occurred while registering: \(error.localizedDescription)")
             } else {
@@ -304,7 +306,7 @@ extension ViewController: PushKitEventDelegate {
     func credentialsInvalidated() {
         guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken) else { return }
         
-        TwilioVoiceSDK.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
+        TwilioVoiceSDK.unregister(accessToken: accessToken!, deviceToken: deviceToken) { error in
             if let error = error {
                 NSLog("An error occurred while unregistering: \(error.localizedDescription)")
             } else {
@@ -757,7 +759,7 @@ extension ViewController: CXProviderDelegate {
     }
     
     func performVoiceCall(uuid: UUID, client: String?, completionHandler: @escaping (Bool) -> Void) {
-        let connectOptions = ConnectOptions(accessToken: accessToken) { builder in
+        let connectOptions = ConnectOptions(accessToken: accessToken!) { builder in
             builder.params = [twimlParamTo: self.outgoingValue.text ?? ""]
             builder.uuid = uuid
         }
